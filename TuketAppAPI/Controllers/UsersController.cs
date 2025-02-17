@@ -24,7 +24,7 @@ namespace TuketAppAPI.Controllers
             _configuration = configuration;
         }
 
-        // ✅ Kullanıcı Kayıt (Register)
+        //  Kullanıcı Kayıt (Register)
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterRequest request)
         {
@@ -48,7 +48,7 @@ namespace TuketAppAPI.Controllers
             return Ok("Kullanıcı başarıyla oluşturuldu.");
         }
 
-        // ✅ Kullanıcı Girişi (Login) + JWT Token
+        //  Kullanıcı Girişi (Login) + JWT Token
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
@@ -62,7 +62,7 @@ namespace TuketAppAPI.Controllers
             return Ok(new { message = "Giriş başarılı", token });
         }
 
-        // ✅ Kullanıcı Bilgilerini Getiren Endpoint
+        //  Kullanıcı Bilgilerini Getiren Endpoint
         [HttpGet("me")]
         [Authorize]  // Sadece giriş yapmış kullanıcılar erişebilir
         public async Task<IActionResult> GetUserProfile()
@@ -88,7 +88,7 @@ namespace TuketAppAPI.Controllers
             });
         }
 
-        // ✅ Şifreyi Hashleme
+        //  Şifreyi Hashleme
         private string HashPassword(string password)
         {
             using var sha256 = SHA256.Create();
@@ -96,7 +96,7 @@ namespace TuketAppAPI.Controllers
             return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
         }
 
-        // ✅ JWT Token Oluşturma Fonksiyonu
+        //  JWT Token Oluşturma Fonksiyonu
         private string GenerateJwtToken(User user)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
@@ -104,7 +104,7 @@ namespace TuketAppAPI.Controllers
 
             if (string.IsNullOrEmpty(secretKeyString))
             {
-                throw new Exception("🚨 Secret Key is missing!");
+                throw new Exception(" Secret Key is missing!");
             }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKeyString));

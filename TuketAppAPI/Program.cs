@@ -7,30 +7,30 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ Hangi yapılandırma dosyasının kullanıldığını terminale yaz
+//  Hangi yapılandırma dosyasının kullanıldığını terminale yaz
 Console.WriteLine($"Using configuration file: {builder.Environment.EnvironmentName}");
 
-// ✅ MySQL Veritabanı Bağlantısını Yapılandır
+//  MySQL Veritabanı Bağlantısını Yapılandır
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<TuketDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-// ✅ JWT Authentication Ayarları
+//  JWT Authentication Ayarları
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
-// ✅ Secret Key’in eksik olup olmadığını kontrol et
+//  Secret Key’in eksik olup olmadığını kontrol et
 var secretKeyString = jwtSettings["Secret"];
 if (string.IsNullOrEmpty(secretKeyString))
 {
-    throw new Exception("🚨 Error: Secret Key is missing from configuration!");
+    throw new Exception(" Error: Secret Key is missing from configuration!");
 }
 
-// ✅ Secret Key’i HEX olarak kullan
+//  Secret Key’i HEX olarak kullan
 var secretKeyBytes = Encoding.UTF8.GetBytes(secretKeyString);
 var secretKey = new SymmetricSecurityKey(secretKeyBytes);
-Console.WriteLine($"✅ Loaded Secret Key: {secretKeyString}");
+Console.WriteLine($" Loaded Secret Key: {secretKeyString}");
 
-// ✅ Authentication & Authorization Middleware
+//  Authentication & Authorization Middleware
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -43,7 +43,7 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = secretKey,  // ✅ HEX formatındaki Secret Key Kullanıldı
+        IssuerSigningKey = secretKey,  //  HEX formatındaki Secret Key Kullanıldı
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidIssuer = jwtSettings["Issuer"],
@@ -52,11 +52,11 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// ✅ API Servislerini Ekleyelim
+//  API Servislerini Ekleyelim
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// ✅ Swagger UI için JWT Desteğini Ekleyelim
+//  Swagger UI için JWT Desteğini Ekleyelim
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "TuketAppAPI", Version = "v1" });
@@ -88,20 +88,20 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// ✅ Uygulamayı Başlat
+//  Uygulamayı Başlat
 var app = builder.Build();
 
-// ✅ Kullanılan ortamı terminale yaz
-Console.WriteLine($"🚀 Application is running in {app.Environment.EnvironmentName} mode.");
+//  Kullanılan ortamı terminale yaz
+Console.WriteLine($" Application is running in {app.Environment.EnvironmentName} mode.");
 
-// ✅ Swagger UI'yi Aktif Et
+//  Swagger UI'yi Aktif Et
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// ✅ Middleware'leri Aktif Et
+//  Middleware'leri Aktif Et
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
