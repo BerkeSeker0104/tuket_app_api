@@ -1,0 +1,6 @@
+@TuketAppAPI_HostAddress = http://localhost:5124
+
+GET {{TuketAppAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
